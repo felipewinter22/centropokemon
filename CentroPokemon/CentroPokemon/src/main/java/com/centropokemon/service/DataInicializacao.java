@@ -181,7 +181,14 @@ public class DataInicializacao {
                 stats.setAtaqueEspecial(pokemon.getStats().getAtaqueEspecial());
                 stats.setDefesaEspecial(pokemon.getStats().getDefesaEspecial());
             }
-            alvo.setDescricoes(pokemon.getDescricoes());
+            if (pokemon.getDescricoes() != null) {
+                List<PokemonDescricao> descricoesAtualizadas = new ArrayList<>();
+                for (PokemonDescricao d : pokemon.getDescricoes()) {
+                    d.setPokemon(alvo);
+                    descricoesAtualizadas.add(d);
+                }
+                alvo.setDescricoes(descricoesAtualizadas);
+            }
         } else {
             alvo = pokemon;
         }

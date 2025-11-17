@@ -10,9 +10,12 @@
 
 package com.centropokemon.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Exceção de domínio lançada quando um Pokémon não é encontrado.
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class PokemonNotFoundException extends RuntimeException {
     public PokemonNotFoundException(String message) {
         super(message);
