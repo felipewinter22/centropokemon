@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        DataInicializacao.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-16
+ * @version     1.1
+ * @date        2025-11-17
  * @description Serviço responsável por buscar dados na PokeAPI v2 e montar
  *               objetos de domínio (Pokémon, Tipos, Stats, Descrições).
  *               Persistência será integrada nas próximas etapas.
@@ -16,6 +16,10 @@ import com.centropokemon.model.Pokemon;
 import com.centropokemon.model.PokemonDescricao;
 import com.centropokemon.model.PokemonStats;
 import com.centropokemon.model.Tipo;
+import com.centropokemon.repository.PokemonRepository;
+import com.centropokemon.repository.PokemonStatsRepository;
+import com.centropokemon.repository.PokemonDescricaoRepository;
+import com.centropokemon.repository.TipoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Serviço de inicialização de dados a partir da PokeAPI v2.
@@ -36,8 +41,7 @@ import java.util.Objects;
 public class DataInicializacao {
 
     private static final String API_BASE = "https://pokeapi.co/api/v2";
-    private final RestTemplate http;
-    private final ObjectMapper mapper;
+    
 
     /**
      * Mapa de tradução de tipos da API (inglês) para português.
@@ -67,11 +71,20 @@ public class DataInicializacao {
     }
 
     /**
-     * Construtor padrão com clientes HTTP e JSON.
-     */
-    public DataInicializacao() {
+    * Construtor com injeção de repositórios e clientes HTTP/JSON.
+    */
+    public DataInicializacao(
+            PokemonRepository pokemonRepository,
+            TipoRepository tipoRepository,
+            PokemonStatsRepository statsRepository,
+            PokemonDescricaoRepository descricaoRepository
+    ) {
         this.http = new RestTemplate();
         this.mapper = new ObjectMapper();
+        this.pokemonRepository = pokemonRepository;
+        this.tipoRepository = tipoRepository;
+        this.statsRepository = statsRepository;
+        this.descricaoRepository = descricaoRepository;
     }
 
     /**
@@ -80,7 +93,7 @@ public class DataInicializacao {
      * stats e descrições em PT/EN.
      *
      * @param nomeOuId nome em inglês ou ID numérico do Pokémon
-     * @return entidade `Pokemon` preenchida
+     * @return entidade Pokemon preenchida
      */
     public Pokemon carregarPokemon(String nomeOuId) {
         JsonNode pokemonNode = getPokemonNode(nomeOuId);
@@ -98,7 +111,7 @@ public class DataInicializacao {
         pokemon.setSpriteUrl(spriteUrl);
 
         List<Tipo> tipos = extrairTipos(pokemonNode.path("types"));
-        pokemon.setTipos(tipos);
+        pokemon.setTipos(resolverTipos(tipos));
 
         PokemonStats stats = extrairStats(pokemonNode.path("stats"));
         stats.setPokemon(pokemon);
@@ -119,7 +132,60 @@ public class DataInicializacao {
         }
         pokemon.setDescricoes(descricoes);
 
-        return pokemon;
+        Pokemon salvo = salvarOuAtualizarPokemon(pokemon);
+        return salvo;
+    }
+
+    private final RestTemplate http;
+    private final ObjectMapper mapper;
+    private final PokemonRepository pokemonRepository;
+    private final TipoRepository tipoRepository;
+    private final PokemonStatsRepository statsRepository;
+    private final PokemonDescricaoRepository descricaoRepository;
+
+    private List<Tipo> resolverTipos(List<Tipo> tipos) {
+        List<Tipo> resolvidos = new ArrayList<>();
+        for (Tipo tipo : tipos) {
+            Optional<Tipo> existente = tipoRepository.findByNomeEnIgnoreCase(tipo.getNomeEn());
+            if (existente.isEmpty()) {
+                existente = tipoRepository.findByNomePtIgnoreCase(tipo.getNomePt());
+            }
+            Tipo t = existente.orElseGet(() -> tipoRepository.save(tipo));
+            resolvidos.add(t);
+        }
+        return resolvidos;
+    }
+
+    private Pokemon salvarOuAtualizarPokemon(Pokemon pokemon) {
+        Optional<Pokemon> existente = pokemonRepository.findByPokeApiId(pokemon.getPokeApiId());
+        Pokemon alvo;
+        if (existente.isPresent()) {
+            alvo = existente.get();
+            alvo.setNomeEn(pokemon.getNomeEn());
+            alvo.setNomePt(pokemon.getNomePt());
+            alvo.setSpriteUrl(pokemon.getSpriteUrl());
+            alvo.setTipos(pokemon.getTipos());
+            alvo.setVidaMaxima(pokemon.getVidaMaxima());
+            alvo.setVidaAtual(pokemon.getVidaAtual());
+            if (pokemon.getStats() != null) {
+                PokemonStats stats = alvo.getStats();
+                if (stats == null) {
+                    stats = new PokemonStats();
+                    stats.setPokemon(alvo);
+                    alvo.setStats(stats);
+                }
+                stats.setHp(pokemon.getStats().getHp());
+                stats.setAtaque(pokemon.getStats().getAtaque());
+                stats.setDefesa(pokemon.getStats().getDefesa());
+                stats.setVelocidade(pokemon.getStats().getVelocidade());
+                stats.setAtaqueEspecial(pokemon.getStats().getAtaqueEspecial());
+                stats.setDefesaEspecial(pokemon.getStats().getDefesaEspecial());
+            }
+            alvo.setDescricoes(pokemon.getDescricoes());
+        } else {
+            alvo = pokemon;
+        }
+        return pokemonRepository.save(alvo);
     }
 
     /**
@@ -171,7 +237,7 @@ public class DataInicializacao {
      * Constrói os atributos base do Pokémon a partir do JSON de stats.
      *
      * @param stats nó JSON "stats"
-     * @return entidade `PokemonStats` preenchida
+     * @return entidade PokemonStats preenchida
      */
     private PokemonStats extrairStats(JsonNode stats) {
         if (stats == null || !stats.isArray()) return new PokemonStats();
@@ -223,7 +289,7 @@ public class DataInicializacao {
      *
      * @param species nó JSON "pokemon-species"
      * @param pokemon entidade alvo
-     * @return `PokemonDescricao` com textos PT/EN ou null
+     * @return PokemonDescricao com textos PT/EN ou null
      */
     private PokemonDescricao extrairDescricao(JsonNode species, Pokemon pokemon) {
         if (species == null || species.isMissingNode()) return null;
@@ -253,9 +319,9 @@ public class DataInicializacao {
     }
 
     /**
-     * Faz a chamada ao endpoint `pokemon/{nomeOuId}` e retorna o JSON.
+     * Faz a chamada ao endpoint pokemon/{nomeOuId} e retorna o JSON.
      *
-     * @param nomeOuId identificador
+     * @param nomeOuId identificador do Pokémon (nome ou ID)
      * @return nó JSON ou null
      */
     private JsonNode getPokemonNode(String nomeOuId) {
@@ -269,7 +335,7 @@ public class DataInicializacao {
     }
 
     /**
-     * Faz a chamada ao endpoint `pokemon-species/{id}` e retorna o JSON.
+     * Faz a chamada ao endpoint pokemon-species/{id} e retorna o JSON.
      *
      * @param id identificador numérico
      * @return nó JSON ou null
