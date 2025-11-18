@@ -63,7 +63,7 @@ O **Centro Pokémon** é uma aplicação construída para gerenciar treinadores,
 ### **1. Clonar o Repositório**
 
 ```bash
-git clone https://github.com/SEU-USUARIO/centro-pokemon.git
+git clone https://github.com/felipewinter22/pokemonprojeto.git
 cd centro-pokemon
 ```
 
@@ -125,7 +125,7 @@ Contém entidades JPA como:
 
 * `Treinador`
 * `Pokemon`
-* `Batalha`
+  
 
 ### **Repository**
 
@@ -146,7 +146,6 @@ API endpoints.
 * Cadastro de Treinadores
 * Cadastro de Pokémon
 * Associação Treinador ↔ Pokémon
-* Registro de batalhas
 * Listagens, buscas e filtros
 
 ---
