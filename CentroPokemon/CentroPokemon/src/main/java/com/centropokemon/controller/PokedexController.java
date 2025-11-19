@@ -64,4 +64,13 @@ public class PokedexController {
         }
         return ResponseEntity.ok(pokemon);
     }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Pokemon> buscarPorId(@PathVariable Integer id) {
+        Pokemon pokemon = service.buscarPokemonPorId(id);
+        if (pokemon == null) {
+            throw new PokemonNotFoundException("Pokémon não encontrado: " + id);
+        }
+        return ResponseEntity.ok(pokemon);
+    }
 }

@@ -58,4 +58,12 @@ public class PokedexService {
     public Pokemon buscarPokemonAleatorioPorTipo(String type) {
         return dataInicializacao.carregarPokemonAleatorioPorTipo(type);
     }
+
+    public Pokemon buscarPokemonPorId(Integer id) {
+        Optional<Pokemon> porRepo = pokemonRepository.findByPokeApiId(id);
+        if (porRepo.isPresent()) {
+            return porRepo.get();
+        }
+        return dataInicializacao.carregarPokemon(String.valueOf(id));
+    }
 }

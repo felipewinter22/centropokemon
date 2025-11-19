@@ -173,6 +173,48 @@
             </div>
         </div>
     </main>
+    <div class="pagina" id="centro">
+        <h2>Centro de Cura</h2>
+        <div class="pagina-content">
+            <div class="agendamento-container">
+                <div class="agendamento-form-card">
+                    <h3>Agendar Consulta</h3>
+                    <form id="agendar-consulta-form">
+                        <div class="form-row">
+                            <label for="pokemon-select">Pokémon</label>
+                            <select id="pokemon-select" required></select>
+                        </div>
+                        <div class="form-row">
+                            <label for="tipo-consulta">Tipo</label>
+                            <select id="tipo-consulta" required>
+                                <option value="CONSULTA">Consulta</option>
+                                <option value="VACINACAO">Vacinação</option>
+                                <option value="CHECKUP">Check-up</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="datahora-consulta">Data e Hora</label>
+                            <input id="datahora-consulta" type="datetime-local" required />
+                        </div>
+                        <div class="form-row">
+                            <label for="obs-consulta">Observações</label>
+                            <textarea id="obs-consulta" rows="3" placeholder="Opcional"></textarea>
+                        </div>
+                        <div class="agendar-actions">
+                            <button type="submit" class="btn primary">Agendar</button>
+                            <a href="#consultas-list" class="btn secondary">Ver agendamentos</a>
+                        </div>
+                        <div id="agendar-alert" class="alert" role="alert"></div>
+                    </form>
+                </div>
+
+                <div class="agendadas-card" id="consultas-list">
+                    <h3>Consultas Agendadas</h3>
+                    <div class="consultas-grid" id="consultas-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="pagina" id="sobre">
         <h2>Sobre o Centro Pokémon</h2>
         <div class="welcome-message">
@@ -190,5 +232,107 @@
 
     <!-- @scripts   JavaScript externo para animações -->
     <script src="/js/animacoes.js"></script>
+    <script>
+        const API_BASE_TREINADORES = '/CentroPokemon/api/treinadores';
+        const TRAINER_ID_KEY = 'treinador_id';
+        const trainerId = localStorage.getItem(TRAINER_ID_KEY);
+        const pokemonSelect = document.getElementById('pokemon-select');
+        const consultasGrid = document.getElementById('consultas-grid');
+        const alertBox = document.getElementById('agendar-alert');
+
+        function setAlert(type, text) {
+            alertBox.className = 'alert';
+            alertBox.textContent = '';
+            if (!text) return;
+            alertBox.classList.add(type);
+            alertBox.textContent = text;
+        }
+
+        async function fetchJson(url, init) {
+            const res = await fetch(url, init);
+            if (!res.ok) throw new Error(String(res.status));
+            return res.json();
+        }
+
+        async function carregarPokemons() {
+            if (!trainerId) {
+                pokemonSelect.innerHTML = '<option value="">Faça login para agendar</option>';
+                pokemonSelect.disabled = true;
+                setAlert('error', 'Faça login para agendar consultas.');
+                return;
+            }
+            const lista = await fetchJson(`${API_BASE_TREINADORES}/${trainerId}/pokemons`);
+            pokemonSelect.innerHTML = '';
+            for (const p of lista) {
+                const opt = document.createElement('option');
+                opt.value = String(p.id);
+                opt.textContent = `${p.nomePt} (#${p.pokeApiId || p.id})`;
+                pokemonSelect.appendChild(opt);
+            }
+        }
+
+        function renderConsultas(consultas) {
+            consultasGrid.innerHTML = '';
+            if (!consultas || consultas.length === 0) {
+                consultasGrid.innerHTML = '<div class="empty">Nenhuma consulta agendada.</div>';
+                return;
+            }
+            for (const c of consultas) {
+                const card = document.createElement('div');
+                card.className = 'consulta-item';
+                const dt = new Date(c.dataHora);
+                const dtStr = dt.toLocaleString('pt-BR');
+                card.innerHTML = `
+                    <div class="consulta-header">
+                        <span class="consulta-tipo">${c.tipo}</span>
+                        <span class="consulta-data">${dtStr}</span>
+                    </div>
+                    <div class="consulta-body">
+                        <div class="consulta-pokemon">
+                            <img src="${c.pokemonSpriteUrl}" alt="${c.pokemonNome}" />
+                            <span>${c.pokemonNome}</span>
+                        </div>
+                        ${c.observacoes ? `<div class="consulta-obs">${c.observacoes}</div>` : ''}
+                    </div>
+                `;
+                consultasGrid.appendChild(card);
+            }
+        }
+
+        async function carregarConsultas() {
+            if (!trainerId) return;
+            const lista = await fetchJson(`${API_BASE_TREINADORES}/${trainerId}/consultas`);
+            renderConsultas(lista);
+        }
+
+        async function handleAgendar(e) {
+            e.preventDefault();
+            if (!trainerId) {
+                setAlert('error', 'Faça login para agendar consultas.');
+                return;
+            }
+            const pokemonId = Number(pokemonSelect.value);
+            const tipo = document.getElementById('tipo-consulta').value;
+            const dataHoraStr = document.getElementById('datahora-consulta').value;
+            const observacoes = document.getElementById('obs-consulta').value;
+            if (!pokemonId || !tipo || !dataHoraStr) {
+                setAlert('error', 'Preencha Pokémon, Tipo e Data/Hora.');
+                return;
+            }
+            const body = { pokemonId, tipo, dataHora: dataHoraStr, observacoes };
+            try {
+                await fetchJson(`${API_BASE_TREINADORES}/${trainerId}/consultas`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+                });
+                setAlert('success', 'Consulta agendada com sucesso.');
+                await carregarConsultas();
+            } catch (err) {
+                setAlert('error', 'Não foi possível agendar.');
+            }
+        }
+
+        document.getElementById('agendar-consulta-form').addEventListener('submit', handleAgendar);
+        carregarPokemons().then(carregarConsultas).catch(() => {});
+    </script>
 </body>
 </html>
