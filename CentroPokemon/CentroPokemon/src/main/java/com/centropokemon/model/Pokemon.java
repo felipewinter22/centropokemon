@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        Pokemon.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-15
+ * @version     1.1
+ * @date        2025-11-18
  * @description Classe base representando um Pokémon para uso com a API.
  */
 
@@ -13,6 +13,7 @@ package com.centropokemon.model;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,12 @@ public class Pokemon {
     @OneToOne(mappedBy = "pokemon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("stats-pokemon")
     private PokemonStats stats;
+
+    /** Treinador ao qual este Pokémon pertence. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "treinador_id")
+    @JsonBackReference("treinador-pokemon")
+    private Treinador treinador;
 
     /**
      * Construtor padrão. Cria um Pokémon com vida inicial e máxima iguais a 100.
@@ -240,6 +247,15 @@ public class Pokemon {
         this.stats = stats;
     }
 
+    /** @return treinador associado ao Pokémon */
+    public Treinador getTreinador() {
+        return treinador;
+    }
+    /** @param treinador treinador associado ao Pokémon */
+    public void setTreinador(Treinador treinador) {
+        this.treinador = treinador;
+    }
+
     /**
      * Restaura a vida do Pokémon para o valor máximo.
      */
@@ -256,3 +272,4 @@ public class Pokemon {
         return vidaAtual < vidaMaxima;
     }
 }
+
