@@ -3,13 +3,14 @@
  * ---------------------------------------
  * @file        PokemonRepository.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-17
+ * @version     1.1
+ * @date        2025-11-18
  * @description Interface de repositório JPA para operações de persistência de Pokémon.
  */
 
 package com.centropokemon.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,6 +46,28 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
     Optional<Pokemon> findByPokeApiId(Integer pokeApiId);
 
     /**
+     * Lista todos os Pokémon cadastrados por um treinador.
+     * @param treinadorId identificador do treinador
+     * @return lista de Pokémon pertencentes ao treinador
+     */
+    List<Pokemon> findByTreinadorId(Integer treinadorId);
+
+    /**
+     * Busca um Pokémon específico de um treinador pelo ID da PokeAPI.
+     * @param treinadorId identificador do treinador
+     * @param pokeApiId identificador externo da PokeAPI
+     * @return Optional com o Pokémon, se encontrado
+     */
+    Optional<Pokemon> findByTreinadorIdAndPokeApiId(Integer treinadorId, Integer pokeApiId);
+
+    /**
+     * Conta quantos Pokémon um treinador possui cadastrados.
+     * @param treinadorId identificador do treinador
+     * @return quantidade de Pokémon
+     */
+    long countByTreinadorId(Integer treinadorId);
+
+    /**
      * Alias em português para findByNomeEnIgnoreCase.
      * @param nomeEn nome do Pokémon em inglês
      * @return Optional com o Pokémon, se encontrado
@@ -69,5 +92,33 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Integer> {
      */
     default Optional<Pokemon> buscarPorPokeApiId(Integer pokeApiId) {
         return findByPokeApiId(pokeApiId);
+    }
+
+    /**
+     * Alias em português para {@code findByTreinadorId}.
+     * @param treinadorId identificador do treinador
+     * @return lista de Pokémon
+     */
+    default List<Pokemon> buscarPorTreinadorId(Integer treinadorId) {
+        return findByTreinadorId(treinadorId);
+    }
+
+    /**
+     * Alias em português para {@code findByTreinadorIdAndPokeApiId}.
+     * @param treinadorId identificador do treinador
+     * @param pokeApiId identificador externo da PokeAPI
+     * @return Optional com o Pokémon
+     */
+    default Optional<Pokemon> buscarPorTreinadorIdEPokeApiId(Integer treinadorId, Integer pokeApiId) {
+        return findByTreinadorIdAndPokeApiId(treinadorId, pokeApiId);
+    }
+
+    /**
+     * Alias em português para {@code countByTreinadorId}.
+     * @param treinadorId identificador do treinador
+     * @return quantidade de Pokémon
+     */
+    default long contarPorTreinadorId(Integer treinadorId) {
+        return countByTreinadorId(treinadorId);
     }
 }
