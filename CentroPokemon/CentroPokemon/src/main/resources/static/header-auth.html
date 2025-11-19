@@ -1,0 +1,130 @@
+<!-- Header com autenticação reorganizada -->
+<header>
+    <div class="header-content">
+        <h1>Centro Pokémon</h1>
+        <nav>
+            <ul class="main-nav">
+                <li><a href="/Pokemon.html" class="active">Início</a></li>
+                <li><a href="/pokedex-anime.html">Pokédex</a></li>
+                <li><a href="/Pokemon.html#centro">Centro de Cura</a></li>
+                <li><a href="/Pokemon.html#sobre">Sobre</a></li>
+            </ul>
+            <div class="auth-links" id="auth-links">
+                <!-- Links de autenticação serão atualizados dinamicamente -->
+            </div>
+        </nav>
+    </div>
+</header>
+
+<script>
+// Função para atualizar os links de autenticação no header
+function updateAuthLinks() {
+    const authLinks = document.getElementById('auth-links');
+    const trainerId = localStorage.getItem('treinador_id');
+    
+    if (trainerId) {
+        // Usuário logado
+        authLinks.innerHTML = `
+            <span class="user-info">Treinador #${trainerId}</span>
+            <a href="#" onclick="logout()">Sair</a>
+        `;
+    } else {
+        // Usuário não logado
+        authLinks.innerHTML = `
+            <a href="/login.html">Login</a>
+            <a href="/cadastro.html">Cadastro</a>
+        `;
+    }
+}
+
+// Função de logout
+function logout() {
+    localStorage.removeItem('treinador_id');
+    updateAuthLinks();
+    // Recarregar a página para atualizar o estado
+    window.location.reload();
+}
+
+// Atualizar links quando a página carregar
+document.addEventListener('DOMContentLoaded', updateAuthLinks);
+
+// Atualizar também quando houver mudanças no localStorage (ex: login/logout em outra aba)
+window.addEventListener('storage', updateAuthLinks);
+</script>
+
+<style>
+/* Estilos adicionais para o header reorganizado */
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.main-nav {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.auth-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.auth-links a {
+  background: var(--pokemon-yellow);
+  color: var(--pokemon-blue);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 2px solid var(--pokemon-blue);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 0 var(--pokemon-dark-gray);
+}
+
+.auth-links a:hover {
+  background: var(--pokemon-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 var(--pokemon-dark-gray);
+}
+
+.auth-links .user-info {
+  color: var(--pokemon-white);
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .auth-links {
+    margin-left: 0;
+  }
+}
+</style>

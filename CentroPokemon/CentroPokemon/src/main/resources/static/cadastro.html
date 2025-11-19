@@ -13,7 +13,11 @@
 
         async function postJson(url, body) {
             const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-            if (!res.ok) throw new Error('Erro na requisição');
+            if (!res.ok) {
+                const status = res.status;
+                const text = await res.text().catch(() => '');
+                throw new Error(String(status || 'Erro na requisição'));
+            }
             return res.json();
         }
 
@@ -34,7 +38,11 @@
                 return;
             }
             try {
-                const t = await postJson(`${API_BASE}/cadastrar`, { nome, usuario, email, senha, telefone });
+                const starterIdRaw = form.starterId ? form.starterId.value : '';
+                const starterId = starterIdRaw ? parseInt(starterIdRaw, 10) : null;
+                const starterName = form.starterName ? (form.starterName.value || null) : null;
+                const starterSpriteUrl = form.starterSpriteUrl ? (form.starterSpriteUrl.value || (starterId ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${starterId}.png` : null)) : null;
+                const t = await postJson(`${API_BASE}/cadastrar`, { nome, usuario, email, senha, telefone, starterId, starterName, starterSpriteUrl });
                 if (t && t.id) {
                     localStorage.setItem(TRAINER_ID_KEY, String(t.id));
                     alertBox.classList.add('success');
@@ -46,7 +54,11 @@
                 }
             } catch (err) {
                 alertBox.classList.add('error');
-                alertBox.textContent = 'Usuário ou e-mail já cadastrados ou erro no servidor';
+                if (String(err && err.message) === '409') {
+                    alertBox.textContent = 'Usuário ou e-mail já cadastrados';
+                } else {
+                    alertBox.textContent = 'Erro no servidor. Tente novamente.';
+                }
             }
         }
 
@@ -82,16 +94,27 @@
                 const id = el.dataset.id;
                 const name = el.dataset.name;
                 if (imageEl) imageEl.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+                const hiddenId = document.getElementById('starter-id');
+                const hiddenName = document.getElementById('starter-name');
+                const hiddenSprite = document.getElementById('starter-sprite');
+                if (hiddenId) hiddenId.value = id;
+                if (hiddenName) hiddenName.value = name;
+                if (hiddenSprite) hiddenSprite.value = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
                 if (descEl) descEl.textContent = `Inicial escolhido: ${name}`;
             };
             starters.forEach(el => el.addEventListener('click', () => setStarter(el)));
         }
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    
 </head>
 <body class="cadastro-page">
     <header>
-        <div class="header-content">
+        <div class="auth-links auth-top-right">
+            <a href="/cadastro.html" class="active">Cadastro</a>
+            <a href="/login.html">Login</a>
+        </div>
+        <div class="header-content header-stacked">
             <h1>Centro Pokémon</h1>
             <nav>
                 <ul>
@@ -99,11 +122,14 @@
                     <li><a href="/pokedex-anime.html">Pokédex</a></li>
                     <li><a href="/Pokemon.html#centro">Centro de Cura</a></li>
                     <li><a href="/Pokemon.html#sobre">Sobre</a></li>
-                    <li><a href="/cadastro.html" class="active">Cadastro</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+    
+    
+    
+    
 
     <main>
         <section class="cadastro-layout">
@@ -147,6 +173,9 @@
                 </div>
                 <div class="pokedex-bottom">
                     <form id="cadastro-form" class="cadastro-form">
+                        <input type="hidden" id="starter-id" name="starterId" />
+                        <input type="hidden" id="starter-name" name="starterName" />
+                        <input type="hidden" id="starter-sprite" name="starterSpriteUrl" />
                         <div>
                             <label for="nome">Nome completo*</label>
                             <input type="text" id="nome" name="nome" required />
@@ -173,6 +202,9 @@
                                 <a class="pokedex-btn blue" href="/pokedex-anime.html"><span class="btn-icon">📖</span> Pokédex</a>
                             </div>
                             <div id="alert" class="alert"></div>
+                        </div>
+                        <div class="login-links">
+                            <p>Já tem uma conta? <a href="/login.html">Faça login aqui</a></p>
                         </div>
                     </form>
                 </div>

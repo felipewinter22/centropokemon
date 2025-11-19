@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        CadastroPokemonService.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-18
+ * @version     1.1
+ * @date        2025-11-19
  * @description Regras de domínio para cadastrar, listar e remover Pokémon
  *              associados a um treinador.
  */

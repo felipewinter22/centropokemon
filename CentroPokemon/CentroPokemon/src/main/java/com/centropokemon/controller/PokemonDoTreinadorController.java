@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        PokemonDoTreinadorController.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-18
+ * @version     1.1
+ * @date        2025-11-19
  * @description Endpoints REST para cadastro e listagem de Pokémon de um treinador.
  */
 

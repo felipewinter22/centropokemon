@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        TreinadorService.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-18
+ * @version     1.1
+ * @date        2025-11-19
  * @description Serviço de domínio para cadastro e autenticação de Treinadores.
  *              Fornece validações e consultas utilitárias.
  */
@@ -45,19 +45,26 @@ public class TreinadorService {
      * @throws IllegalArgumentException quando já existe usuário/e-mail cadastrados
      */
     public Treinador cadastrar(String nome, String usuario, String email, String senhaEmClaro, String telefone) {
-        if (treinadores.existePorUsuario(usuario)) {
+        String n = nome != null ? nome.trim() : null;
+        String u = usuario != null ? usuario.trim() : null;
+        String e = email != null ? email.trim() : null;
+        String s = senhaEmClaro != null ? senhaEmClaro.trim() : null;
+        if (u == null || u.isBlank() || e == null || e.isBlank() || n == null || n.isBlank() || s == null || s.isBlank()) {
+            throw new IllegalArgumentException("Campos obrigatórios inválidos");
+        }
+        if (treinadores.existePorUsuario(u)) {
             throw new IllegalArgumentException("Usuário já cadastrado: " + usuario);
         }
-        if (treinadores.existePorEmail(email)) {
+        if (treinadores.existePorEmail(e)) {
             throw new IllegalArgumentException("E-mail já cadastrado: " + email);
         }
 
         Treinador t = new Treinador();
-        t.setNome(nome);
-        t.setUsuario(usuario);
-        t.setEmail(email);
-        t.setSenha(senhaEmClaro);
-        t.setTelefone(telefone);
+        t.setNome(n);
+        t.setUsuario(u);
+        t.setEmail(e);
+        t.setSenha(s);
+        t.setTelefone(telefone != null ? telefone.trim() : null);
         t.setAtivo(true);
         return treinadores.save(t);
     }
@@ -69,11 +76,11 @@ public class TreinadorService {
      * @return Optional com o treinador autenticado, se credenciais válidas
      */
     public Optional<Treinador> autenticar(String usuarioOuEmail, String senhaEmClaro) {
-        String senha = senhaEmClaro;
+        String senha = senhaEmClaro != null ? senhaEmClaro.trim() : null;
         Optional<Treinador> byUsuario = treinadores.buscarPorUsuario(usuarioOuEmail);
         Optional<Treinador> byEmail = byUsuario.isPresent() ? Optional.empty() : treinadores.buscarPorEmail(usuarioOuEmail);
         Optional<Treinador> candidato = byUsuario.isPresent() ? byUsuario : byEmail;
-        return candidato.filter(t -> senha.equals(t.getSenha()) && Boolean.TRUE.equals(t.getAtivo()));
+        return candidato.filter(t -> senha != null && senha.equals(t.getSenha()) && Boolean.TRUE.equals(t.getAtivo()));
     }
 
     /**

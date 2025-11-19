@@ -47,6 +47,13 @@
   --type-fairy: #EE99AC;
 }
 
+.login-page .cadastro-layout { width: 100%; max-width: clamp(960px, 92vw, 1200px); margin: 0 auto; display: grid; grid-template-columns: minmax(0,1.6fr) minmax(0,1fr); gap: clamp(1rem, 3vw, 2rem); align-items: start; }
+.login-page .cadastro-main { width: 100%; }
+.login-page .cadastro-aside { display: grid; }
+.login-page .pokedex-page { display: block !important; width: auto; position: relative; z-index: 1; }
+.login-page .pokedex-container { width: 100% !important; max-width: 100% !important; margin: 0 !important; left: 0; transform: none; }
+.login-page .aside-card img { width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; image-rendering: pixelated; }
+
 /* ===== RESET E BASE ===== */
 * {
   margin: 0;
@@ -98,6 +105,27 @@ body {
     padding: 1rem;
 }
 .cadastro-page .pokedex-top { border-bottom: 6px solid var(--pokedex-black); }
+
+/* Login: espelha layout amplo do cadastro */
+.login-page { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; padding: 0; }
+.login-page main { width: 100%; max-width: clamp(960px, 92vw, 1200px); margin: 0 auto; padding: clamp(1rem, 3vw, 2rem); display: block; }
+.login-page footer { margin-top: auto; }
+
+
+.login-page .pokedex-bottom {
+    max-height: clamp(300px, 60vh, 700px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1rem;
+}
+.login-page .pokedex-top { border-bottom: 6px solid var(--pokedex-black); }
+
+.login-page .cadastro-layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1rem, 3vw, 2rem); align-items: start; }
+.login-page .cadastro-main { width: 100%; }
+.login-page .pokedex-container { width: 100%; max-width: 100%; margin: 0; left: auto; transform: none; }
+.login-page .pokedex-page { width: auto; display: block; position: relative; z-index: 1; }
+
+.login-page .aside-card img { width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; image-rendering: pixelated; }
 
 .pokedex-container {
   background: var(--pokedex-red);

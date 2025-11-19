@@ -86,13 +86,18 @@ header {
 }
 
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: 0 2rem;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
+}
+
+.header-stacked {
+  flex-direction: column;
+  align-items: center;
 }
 
 header h1 {
@@ -112,6 +117,7 @@ header h1 {
 
 /* Navegação estilo Pokémon (fiel ao original anos 2010) */
 nav {
+  width: 100%;
   background: var(--pokemon-white);
   border: 4px solid var(--pokemon-blue);
   border-radius: 12px;
@@ -127,7 +133,52 @@ nav ul {
   justify-content: center;
   gap: 1rem;
   padding: 0;
-  margin: 0;
+  flex-wrap: wrap;
+}
+
+/* Área de autenticação no canto direito */
+.auth-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.auth-top-right {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+
+.auth-links a {
+  background: var(--pokemon-yellow);
+  color: var(--pokemon-blue);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 2px solid var(--pokemon-blue);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 0 var(--pokemon-dark-gray);
+}
+
+.auth-links a:hover {
+  background: var(--pokemon-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 var(--pokemon-dark-gray);
+}
+
+.auth-links a.active {
+  background: var(--pokemon-blue);
+  color: var(--pokemon-white);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--pokemon-dark-gray);
+}
+
+.auth-links .user-info {
+  color: var(--pokemon-white);
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
 }
 
 nav a {

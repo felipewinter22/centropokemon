@@ -3,8 +3,8 @@
  * ---------------------------------------
  * @file        TreinadorController.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.0
- * @date        2025-11-18
+ * @version     1.1
+ * @date        2025-11-19
  * @description Endpoints REST para cadastro e autenticação de Treinadores.
  */
 
@@ -12,9 +12,11 @@ package com.centropokemon.controller;
 
 import com.centropokemon.model.Treinador;
 import com.centropokemon.service.TreinadorService;
+import com.centropokemon.service.CadastroPokemonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.DataIntegrityViolationException;
 
 /**
  * Controlador REST para o ciclo de vida do {@link Treinador}.
@@ -26,13 +28,15 @@ import org.springframework.web.bind.annotation.*;
 public class TreinadorController {
 
     private final TreinadorService service;
+    private final CadastroPokemonService cadastroPokemon;
 
     /**
      * Construtor com injeção do serviço de treinadores.
      * @param service serviço de domínio
      */
-    public TreinadorController(TreinadorService service) {
+    public TreinadorController(TreinadorService service, CadastroPokemonService cadastroPokemon) {
         this.service = service;
+        this.cadastroPokemon = cadastroPokemon;
     }
 
     /**
@@ -45,6 +49,9 @@ public class TreinadorController {
         public String email;
         public String senha;
         public String telefone;
+        public Integer starterId;
+        public String starterName;
+        public String starterSpriteUrl;
     }
 
     /**
@@ -87,11 +94,40 @@ public class TreinadorController {
      */
     @PostMapping("/cadastrar")
     public ResponseEntity<TreinadorResponse> cadastrar(@RequestBody CadastroRequest req) {
-        if (req == null || req.nome == null || req.usuario == null || req.email == null || req.senha == null) {
+        if (req == null || req.nome == null || req.usuario == null || req.email == null || req.senha == null
+                || req.nome.isBlank() || req.usuario.isBlank() || req.email.isBlank() || req.senha.isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Treinador t = service.cadastrar(req.nome, req.usuario, req.email, req.senha, req.telefone);
+        Treinador t;
+        try {
+            t = service.cadastrar(req.nome, req.usuario, req.email, req.senha, req.telefone);
+        } catch (IllegalArgumentException | DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        if (req.starterId != null && cadastroPokemon != null) {
+            Integer id = req.starterId;
+            String name = req.starterName != null ? req.starterName : defaultStarterName(id);
+            String sprite = req.starterSpriteUrl != null ? req.starterSpriteUrl : defaultSpriteUrl(id);
+            try {
+                cadastroPokemon.cadastrar(t.getId(), id, name, name, sprite, null, null);
+            } catch (IllegalArgumentException ignored) {}
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(TreinadorResponse.of(t));
+    }
+
+    private String defaultStarterName(Integer id) {
+        if (id == null) return "Inicial";
+        return switch (id) {
+            case 1 -> "Bulbasaur";
+            case 4 -> "Charmander";
+            case 7 -> "Squirtle";
+            default -> "Inicial";
+        };
+    }
+
+    private String defaultSpriteUrl(Integer id) {
+        if (id == null) return "";
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
     }
 
     /**
