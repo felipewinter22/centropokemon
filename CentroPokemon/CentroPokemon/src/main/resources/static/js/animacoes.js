@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (targetEl) {
                         pages.forEach(function(page) { page.classList.remove('ativa'); });
                         targetEl.classList.add('ativa');
+                        try { window.location.hash = '#' + targetId; } catch (e) {}
                     }
                 }
             } else {
@@ -131,7 +132,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (path.endsWith('/pokedex')) targetHref = '/pokedex';
         else if (path.endsWith('/centro')) targetHref = '/centro';
         else if (path.endsWith('/sobre')) targetHref = '/sobre';
-        var activeLink = Array.from(navLinks).find(function(a){ return (a.getAttribute('href')||'') === targetHref; });
+        var activeLink = Array.from(navLinks).find(function(a){
+            var href = (a.getAttribute('href')||'');
+            return href === targetHref || href.split('#')[0] === targetHref;
+        });
         if (activeLink) activeLink.classList.add('active');
     }
 });
