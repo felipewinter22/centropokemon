@@ -46,133 +46,208 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main>
-        <!--
-        @section    Página Inicial
-        @purpose    Painel com boas-vindas e módulos informativos
-        @modules    Boas-vindas, Estatísticas, Destaque do dia, Ações rápidas,
-                    Notícias, Equipe, Oferta
-        @routing    "/" mostra #inicio; "/centro" mostra #centro; "/sobre" mostra #sobre
-        -->
+        <!-- PÁGINA INICIAL TOTALMENTE NOVA - SISTEMA DE SAÚDE POKÉMON DIGITAL -->
         <div class="pagina ativa" id="inicio">
-            <h2>Bem-vindo ao Centro Pokémon</h2>
-            
             <div class="pagina-content">
-                <!--
-                @block      Boas-vindas
-                @purpose    Mensagem introdutória ao usuário
-                -->
-                <div class="welcome-message">
-                    <p>Olá, Treinador! Este é o Centro Pokémon, onde seus companheiros recebem os melhores cuidados.</p>
-                </div>
-
-                <!--
-                @block      Estatísticas do Centro
-                @data       Quantidades agregadas (curados, atendidos, espécies)
-                -->
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <span class="stat-number">1,234</span>
-                        <span class="stat-label">Pokémon Curados</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">567</span>
-                        <span class="stat-label">Treinadores Atendidos</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">89</span>
-                        <span class="stat-label">Espécies Diferentes</span>
-                    </div>
-                </div>
-
-                <!--
-                @block      Pokémon em Destaque
-                @purpose    Mostra o destaque do dia com sprite e dados resumidos
-                -->
-                <div class="pokemon-destaque">
-                    <div class="destaque-content">
-                        <div class="destaque-info">
-                            <h4>Pikachu</h4>
-                            <p>Nível: 25</p>
-                            <p>Tipo: Elétrico</p>
-                            <p>HP: 72/72</p>
+                <!-- HERO SECTION - CENTRO MÉDICO POKÉMON -->
+                <section class="medical-hero">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h2>Centro Médico Pokémon</h2>
+                            <p class="hero-subtitle">Cuidados especializados 24/7 para seus parceiros</p>
+                            <div class="hero-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">98%</span>
+                                    <span class="stat-label">Taxa de recuperação</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">15min</span>
+                                    <span class="stat-label">Tempo médio de espera</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">500+</span>
+                                    <span class="stat-label">Espécies atendidas</span>
+                                </div>
+                            </div>
                         </div>
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" 
-                             alt="Pikachu" class="destaque-sprite">
-                    </div>
-                </div>
-
-                <!--
-                @block      Ações Rápidas
-                @purpose    Botões de navegação/ação principais do site
-                -->
-                <div class="quick-actions">
-                    <button class="quick-btn">
-                        <span class="feature-icon">⚕️</span>
-                        Curar Pokémon
-                    </button>
-                    <button class="quick-btn secondary">
-                        <span class="feature-icon">📋</span>
-                        Ver Pokédex
-                    </button>
-                    <button class="quick-btn tertiary">
-                        <span class="feature-icon">👥</span>
-                        Equipe Médica
-                    </button>
-                </div>
-
-                <!--
-                @block      Notícias
-                @purpose    Grid com notícias recentes e datas
-                -->
-                <div class="news-container">
-                    <h3>Últimas Notícias</h3>
-                    <div class="news-grid">
-                        <div class="news-item">
-                            <h4>Novo Tratamento Disponível</h4>
-                            <p>Implementamos uma nova técnica de cura para Pokémon do tipo Fogo.</p>
-                            <span class="news-date">17/11/2024</span>
-                        </div>
-                        <div class="news-item">
-                            <h4>Torneio da Liga</h4>
-                            <p>Inscrições abertas para o torneio regional. Prepare seus Pokémon!</p>
-                            <span class="news-date">15/11/2024</span>
+                        <div class="hero-visual">
+                            <div class="medical-monitor">
+                                <div class="monitor-screen">
+                                    <div class="ecg-animation">
+                                        <div class="ecg-line"></div>
+                                        <div class="heartbeat">❤️</div>
+                                    </div>
+                                    <div class="patient-data">
+                                        <span class="patient-name">Pikachu</span>
+                                        <span class="patient-status">Estável</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!--
-                @block      Equipe Médica
-                @purpose    Lista a equipe com cargos e especialidades
-                -->
-                <div class="equipe-container">
-                    <h3>Nossa Equipe</h3>
-                    <div class="equipe-grid">
-                        <div class="equipe-member">
-                            <div class="equipe-avatar">👨‍⚕️</div>
-                            <h4>Dr. Carvalho</h4>
-                            <span class="cargo">Médico Chefe</span>
-                            <p>Especialista em Pokémon do tipo Planta</p>
+                <!-- TRIAGEM VIRTUAL -->
+                <section class="virtual-triage">
+                    <h3>Triagem Virtual Rápida</h3>
+                    <p class="triage-description">Descreva os sintomas do seu Pokémon para priorizar o atendimento</p>
+                    
+                    <div class="triage-form">
+                        <div class="symptom-selector">
+                            <label>Sintomas principais:</label>
+                            <div class="symptom-chips">
+                                <button class="symptom-chip" data-symptom="febre">Febre</button>
+                                <button class="symptom-chip" data-symptom="fraqueza">Fraqueza</button>
+                                <button class="symptom-chip" data-symptom="ferimentos">Ferimentos</button>
+                                <button class="symptom-chip" data-symptom="queimaduras">Queimaduras</button>
+                                <button class="symptom-chip" data-symptom="paralisia">Paralisia</button>
+                                <button class="symptom-chip" data-symptom="envenenamento">Envenenamento</button>
+                            </div>
                         </div>
-                        <div class="equipe-member">
-                            <div class="equipe-avatar">👩‍⚕️</div>
-                            <h4>Enf. Joy</h4>
-                            <span class="cargo">Enfermeira</span>
-                            <p>Cuidados gerais e primeiros socorros</p>
+                        
+                        <div class="urgency-assessment">
+                            <label>Nível de urgência:</label>
+                            <div class="urgency-scale">
+                                <div class="urgency-level" data-level="1">
+                                    <span>Leve</span>
+                                    <div class="urgency-bar"></div>
+                                </div>
+                                <div class="urgency-level" data-level="2">
+                                    <span>Moderado</span>
+                                    <div class="urgency-bar"></div>
+                                </div>
+                                <div class="urgency-level" data-level="3">
+                                    <span>Urgente</span>
+                                    <div class="urgency-bar"></div>
+                                </div>
+                                <div class="urgency-level" data-level="4">
+                                    <span>Emergência</span>
+                                    <div class="urgency-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="triage-submit-btn">
+                            <span>🔄</span>
+                            Analisar Sintomas
+                        </button>
+                    </div>
+                </section>
+
+                <!-- DASHBOARD DE SAÚDE -->
+                <section class="health-dashboard">
+                    <h3>Dashboard de Saúde Pokémon</h3>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card vital-signs">
+                            <h4>Sinais Vitais</h4>
+                            <div class="vitals-display">
+                                <div class="vital-item">
+                                    <span class="vital-label">Batimentos</span>
+                                    <span class="vital-value">120 bpm</span>
+                                </div>
+                                <div class="vital-item">
+                                    <span class="vital-label">Temperatura</span>
+                                    <span class="vital-value">38.2°C</span>
+                                </div>
+                                <div class="vital-item">
+                                    <span class="vital-label">Energia</span>
+                                    <span class="vital-value">85%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card appointment-tracker">
+                            <h4>Próximas Consultas</h4>
+                            <div class="appointment-list">
+                                <div class="appointment-item">
+                                    <span class="appointment-time">Hoje - 14:30</span>
+                                    <span class="appointment-type">Check-up Anual</span>
+                                </div>
+                                <div class="appointment-item">
+                                    <span class="appointment-time">Amanhã - 10:00</span>
+                                    <span class="appointment-type">Vacinação</span>
+                                </div>
+                            </div>
+                            <button class="schedule-btn">
+                                <span>📅</span>
+                                Agendar Nova
+                            </button>
+                        </div>
+                        
+                        <div class="dashboard-card emergency-protocols">
+                            <h4>Protocolos de Emergência</h4>
+                            <div class="protocol-list">
+                                <div class="protocol-item">
+                                    <span class="protocol-icon">🔥</span>
+                                    <span>Queimaduras</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-icon">⚡</span>
+                                    <span>Paralisia</span>
+                                </div>
+                                <div class="protocol-item">
+                                    <span class="protocol-icon">☠️</span>
+                                    <span>Envenenamento</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!--
-                @block      Timer de Oferta
-                @purpose    Elemento promocional com animação simples
-                -->
-                <div class="oferta-timer">
-                    <h4>OFERTA ESPECIAL!</h4>
-                    <div class="timer-display">02:15:33</div>
-                    <p>Cura gratuita para Pokémon do tipo Água</p>
+                <!-- PRONTUÁRIO ELETRÔNICO -->
+                <section class="electronic-record">
+                    <h3>Prontuário Eletrônico</h3>
+                    
+                    <div class="record-container">
+                        <div class="record-header">
+                            <div class="patient-info">
+                                <span class="patient-avatar">🐭</span>
+                                <div class="patient-details">
+                                    <span class="patient-name">Pikachu - Nível 25</span>
+                                    <span class="patient-id">ID: #0025</span>
+                                </div>
+                            </div>
+                            <button class="view-full-record">Ver histórico completo</button>
+                        </div>
+                        
+                        <div class="record-timeline">
+                            <div class="timeline-item">
+                                <span class="timeline-date">21/11/2024</span>
+                                <span class="timeline-event">Vacinação antirrábica</span>
+                                <span class="timeline-doctor">Enf. Joy</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-date">15/11/2024</span>
+                                <span class="timeline-event">Check-up geral</span>
+                                <span class="timeline-doctor">Dr. Carvalho</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-date">05/11/2024</span>
+                                <span class="timeline-event">Tratamento para queimaduras</span>
+                                <span class="timeline-doctor">Enf. Joy</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- BOTÕES DE AÇÃO RÁPIDA -->
+                <div class="medical-actions">
+                    <a href="/centro" class="medical-action-btn primary">
+                        <span>🏥</span>
+                        Agendar Consulta
+                    </a>
+                    <a href="/pokedex" class="medical-action-btn secondary">
+                        <span>�</span>
+                        Ver Pokédex Médica
+                    </a>
+                    <a href="/sobre" class="medical-action-btn tertiary">
+                        <span>�</span>
+                        Falar com Especialista
+                    </a>
                 </div>
-            </div>
-        </div>
+            </div><!-- FIM DO PAGINA-CONTENT -->
+    </div><!-- FIM DO INICIO -->
     </main>
     <div class="pagina" id="centro">
         <h2>Centro de Cura</h2>
@@ -218,9 +293,46 @@
     </div>
     <div class="pagina" id="sobre">
         <h2>Sobre o Centro Pokémon</h2>
-        <div class="welcome-message">
-            <img src="/imagens/sobre.png" alt="Sobre o Centro Pokémon">
-            <p>O Centro Pokémon oferece cuidados completos aos seus parceiros, com equipe dedicada e tecnologia de ponta.</p>
+        
+        <div class="sobre-hero">
+            <img src="/imagens/sobre.png" alt="Centro Pokémon" class="sobre-imagem-destaque">
+            <div class="sobre-texto-hero">
+                <h3>Cuide dos seus parceiros com excelência!</h3>
+                <p>O Centro Pokémon oferece cuidados completos aos seus parceiros, com equipe dedicada e tecnologia de ponta. Somos referência em saúde Pokémon em toda a região.</p>
+            </div>
+        </div>
+
+        <div class="sobre-grid">
+            <div class="sobre-card">
+                <img src="/imagens/Professor-Oak-from-Poke - mon-Black-and-White.png" alt="Professor Carvalho" class="sobre-card-img">
+                <h4>Equipe Especializada</h4>
+                <p>Profissionais treinados pela Liga Pokémon com anos de experiência no cuidado de todas as espécies.</p>
+            </div>
+            
+            <div class="sobre-card">
+                <img src="/imagens/Bag_Master_Ball_SV_Sprite.png" alt="Tecnologia Avançada" class="sobre-card-img">
+                <h4>Tecnologia de Ponta</h4>
+                <p>Equipamentos modernos e tratamentos inovadores para garantir a saúde do seu Pokémon.</p>
+            </div>
+            
+            <div class="sobre-card">
+                <img src="/imagens/rare-candy.png" alt="Tratamentos Especiais" class="sobre-card-img">
+                <h4>Tratamentos Exclusivos</h4>
+                <p>Desde curas básicas até tratamentos especiais para Pokémon lendários e raros.</p>
+            </div>
+        </div>
+
+        <div class="sobre-autores">
+            <h4>Desenvolvido com ❤️ por:</h4>
+            <p>Centro Pokémon feito pelos alunos da segunda fase de ciência da computação da Unoesc:<br>
+            Alexandre Lampert, Gustavo Pigatto, Matheus Schavann, Felipe Winter, e Mateus Stock.</p>
+        </div>
+
+        <div class="sobre-decor">
+            <img class="decor-item pokebola-animada" src="/imagens/pokebola.png" alt="Pokébola">
+            <img class="decor-item greatball-animada" src="/imagens/pokebola.png" alt="Great Ball">
+            <img class="decor-item ultraball-animada" src="/imagens/pokebola.png" alt="Ultra Ball">
+            <img class="decor-item masterball-animada" src="/imagens/Bag_Master_Ball_SV_Sprite.png" alt="Master Ball">
         </div>
     </div>
 
