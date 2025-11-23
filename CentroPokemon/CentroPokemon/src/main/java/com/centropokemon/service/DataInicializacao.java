@@ -24,6 +24,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClientResponseException;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,7 +108,7 @@ public class DataInicializacao {
 
         int id = pokemonNode.path("id").asInt();
         String nomeEn = pokemonNode.path("name").asText();
-        String spriteUrl = extrairMelhorSprite(pokemonNode.path("sprites"));
+        String spriteUrl = escolherSprite(pokemonNode.path("sprites"), nomeEn, id);
 
         Pokemon pokemon = new Pokemon();
         pokemon.setPokeApiId(id);
@@ -162,7 +166,7 @@ public class DataInicializacao {
 
         int id = pokemonNode.path("id").asInt();
         String nomeEn = pokemonNode.path("name").asText();
-        String spriteUrl = extrairMelhorSprite(pokemonNode.path("sprites"));
+        String spriteUrl = escolherSprite(pokemonNode.path("sprites"), nomeEn, id);
 
         Pokemon pokemon = new Pokemon();
         pokemon.setPokeApiId(id);
@@ -322,19 +326,47 @@ public class DataInicializacao {
      */
     private String extrairMelhorSprite(JsonNode sprites) {
         if (sprites == null || sprites.isMissingNode()) return null;
-
         JsonNode other = sprites.path("other");
-        String official = other.path("official-artwork").path("front_default").asText(null);
-        if (official != null && !official.isBlank()) return official;
-
-        String dream = other.path("dream_world").path("front_default").asText(null);
-        if (dream != null && !dream.isBlank()) return dream;
-
         String home = other.path("home").path("front_default").asText(null);
         if (home != null && !home.isBlank()) return home;
-
+        String official = other.path("official-artwork").path("front_default").asText(null);
+        if (official != null && !official.isBlank()) return official;
         String front = sprites.path("front_default").asText(null);
-        return front;
+        if (front != null && !front.isBlank()) return front;
+        String dream = other.path("dream_world").path("front_default").asText(null);
+        return dream;
+    }
+
+    private String escolherSprite(JsonNode sprites, String nomeEn, int id) {
+        List<String> candidatos = new ArrayList<>();
+        String primario = extrairMelhorSprite(sprites);
+        if (primario != null && !primario.isBlank()) candidatos.add(primario);
+        String idStr3 = String.format("%03d", id);
+        candidatos.add("https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + idStr3 + ".png");
+        String nomeLower = nomeEn == null ? null : nomeEn.toLowerCase();
+        if (nomeLower != null && !nomeLower.isBlank()) {
+            candidatos.add("https://img.pokemondb.net/artwork/large/" + nomeLower + ".jpg");
+        }
+        candidatos.add("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png");
+
+        for (String url : candidatos) {
+            if (url == null || url.isBlank()) continue;
+            if (urlDisponivel(url)) return url;
+        }
+        return primario;
+    }
+
+    private boolean urlDisponivel(String url) {
+        try {
+            ResponseEntity<Void> resp = http.exchange(url, HttpMethod.HEAD, HttpEntity.EMPTY, Void.class);
+            int code = resp.getStatusCode().value();
+            return code >= 200 && code < 400;
+        } catch (RestClientResponseException e) {
+            int code = e.getRawStatusCode();
+            return code >= 200 && code < 400;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**

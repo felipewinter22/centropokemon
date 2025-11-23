@@ -309,7 +309,23 @@ const PokedexAnime = (() => {
 
         elements.pokemonNumber.textContent = `#${String(id || 0).padStart(3, '0')}`;
         elements.pokemonName.textContent = name || '------';
-        elements.pokemonSprite.src = sprite;
+        const tries = [];
+        const idStr3 = String(id || 0).padStart(3, '0');
+        if (sprite && sprite.length) tries.push(sprite);
+        tries.push(`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${idStr3}.png`);
+        const nomeLower = (p.nomeEn || '').toLowerCase();
+        if (nomeLower) tries.push(`https://img.pokemondb.net/artwork/large/${nomeLower}.jpg`);
+        tries.push(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.pokeApiId || id}.png`);
+        let idx = 0;
+        elements.pokemonSprite.onerror = () => {
+            idx += 1;
+            if (idx < tries.length) {
+                elements.pokemonSprite.src = tries[idx];
+            } else {
+                elements.pokemonSprite.onerror = null;
+            }
+        };
+        elements.pokemonSprite.src = tries[0];
         elements.pokemonSprite.alt = name;
 
         elements.pokemonTypes.textContent = tipos.length ? tipos.join(' / ') : '------';
