@@ -304,7 +304,7 @@ const PokedexAnime = (() => {
         const p = state.currentPokemon;
         const id = p.pokeApiId || p.id;
         const name = (p.nomePt || p.nomeEn || '').toUpperCase();
-        const sprite = p.spriteUrl || (id ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png` : '');
+        const sprite = p.spriteUrl || '';
         const tipos = Array.isArray(p.tipos) ? p.tipos.map(t => (t.nomePt || t.nome || t.nomeEn || '').toUpperCase()) : [];
 
         elements.pokemonNumber.textContent = `#${String(id || 0).padStart(3, '0')}`;
@@ -319,9 +319,12 @@ const PokedexAnime = (() => {
         });
 
         const stats = p.stats || {};
-        elements.pokemonHeight.textContent = 'N/D';
-        elements.pokemonWeight.textContent = 'N/D';
-        elements.pokemonAbility.textContent = 'N/D';
+        const altura = (typeof p.altura === 'number' && !isNaN(p.altura)) ? `${p.altura.toFixed(1)}m` : 'N/D';
+        const peso = (typeof p.peso === 'number' && !isNaN(p.peso)) ? `${p.peso.toFixed(1)}kg` : 'N/D';
+        const habilidade = (Array.isArray(p.habilidades) && p.habilidades.length > 0) ? String(p.habilidades[0]).toUpperCase() : 'N/D';
+        elements.pokemonHeight.textContent = altura;
+        elements.pokemonWeight.textContent = peso;
+        elements.pokemonAbility.textContent = habilidade;
 
         const desc = getDescription(p) || 'Descrição não disponível.';
         elements.pokemonDescription.textContent = desc;

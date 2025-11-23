@@ -22,7 +22,7 @@ import com.centropokemon.model.Pokemon;
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping("/CentroPokemon/api/pokemons")
+@RequestMapping({"/CentroPokemon/api/pokemons", "/api/pokemons"})
 public class PokedexController {
 
     private final PokedexService service;
@@ -42,7 +42,7 @@ public class PokedexController {
     public ResponseEntity<Pokemon> buscarPokemon(@PathVariable String nome) {
         Pokemon pokemon = service.buscarPokemonPorNome(nome);
         if (pokemon == null) {
-            throw new PokemonNotFoundException("Pokémon não encontrado: " + nome);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pokemon);
     }
@@ -51,7 +51,7 @@ public class PokedexController {
     public ResponseEntity<Pokemon> aleatorio() {
         Pokemon pokemon = service.buscarPokemonAleatorio();
         if (pokemon == null) {
-            throw new PokemonNotFoundException("Pokémon aleatório não disponível");
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pokemon);
     }
@@ -60,7 +60,7 @@ public class PokedexController {
     public ResponseEntity<Pokemon> aleatorioPorTipo(@PathVariable String type) {
         Pokemon pokemon = service.buscarPokemonAleatorioPorTipo(type);
         if (pokemon == null) {
-            throw new PokemonNotFoundException("Nenhum Pokémon disponível para o tipo: " + type);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pokemon);
     }
@@ -69,7 +69,7 @@ public class PokedexController {
     public ResponseEntity<Pokemon> buscarPorId(@PathVariable Integer id) {
         Pokemon pokemon = service.buscarPokemonPorId(id);
         if (pokemon == null) {
-            throw new PokemonNotFoundException("Pokémon não encontrado: " + id);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pokemon);
     }

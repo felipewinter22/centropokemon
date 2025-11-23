@@ -91,6 +91,12 @@ public class Pokemon {
     @Column(name = "habilidade", nullable = false)
     private List<String> habilidades = new ArrayList<>();
 
+    @Transient
+    private Double altura;
+
+    @Transient
+    private Double peso;
+
     /**
      * Construtor padrão. Cria um Pokémon com vida inicial e máxima iguais a 100.
      */
@@ -239,6 +245,12 @@ public class Pokemon {
 
     public List<String> getHabilidades() { return habilidades; }
     public void setHabilidades(List<String> habilidades) { this.habilidades = habilidades; }
+
+    public Double getAltura() { return altura; }
+    public void setAltura(Double altura) { this.altura = altura; }
+
+    public Double getPeso() { return peso; }
+    public void setPeso(Double peso) { this.peso = peso; }
 
     /**
      * Define a lista de tipos do Pokémon.

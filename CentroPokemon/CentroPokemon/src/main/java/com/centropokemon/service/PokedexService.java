@@ -40,30 +40,34 @@ public class PokedexService {
      * @return entidade `Pokemon` ou null se não encontrado
      */
     public Pokemon buscarPokemonPorNome(String nome) {
-        Optional<Pokemon> porEn = pokemonRepository.findByNomeEnIgnoreCase(nome);
-        if (porEn.isPresent()) {
-            return porEn.get();
-        }
-        Optional<Pokemon> porPt = pokemonRepository.findByNomePtIgnoreCase(nome);
-        if (porPt.isPresent()) {
-            return porPt.get();
-        }
-        return dataInicializacao.carregarPokemon(nome);
+        try {
+            Optional<Pokemon> porEn = pokemonRepository.findByNomeEnIgnoreCase(nome);
+            if (porEn.isPresent()) {
+                return porEn.get();
+            }
+            Optional<Pokemon> porPt = pokemonRepository.findByNomePtIgnoreCase(nome);
+            if (porPt.isPresent()) {
+                return porPt.get();
+            }
+        } catch (Exception ignored) {}
+        return dataInicializacao.montarPokemon(nome);
     }
 
     public Pokemon buscarPokemonAleatorio() {
-        return dataInicializacao.carregarPokemonAleatorio();
+        return dataInicializacao.montarPokemonAleatorio();
     }
 
     public Pokemon buscarPokemonAleatorioPorTipo(String type) {
-        return dataInicializacao.carregarPokemonAleatorioPorTipo(type);
+        return dataInicializacao.montarPokemonAleatorioPorTipo(type);
     }
 
     public Pokemon buscarPokemonPorId(Integer id) {
-        Optional<Pokemon> porRepo = pokemonRepository.findByPokeApiId(id);
-        if (porRepo.isPresent()) {
-            return porRepo.get();
-        }
-        return dataInicializacao.carregarPokemon(String.valueOf(id));
+        try {
+            Optional<Pokemon> porRepo = pokemonRepository.findByPokeApiId(id);
+            if (porRepo.isPresent()) {
+                return porRepo.get();
+            }
+        } catch (Exception ignored) {}
+        return dataInicializacao.montarPokemon(String.valueOf(id));
     }
 }

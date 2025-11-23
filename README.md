@@ -2,7 +2,7 @@
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Visual Paradigm](https://img.shields.io/badge/Visual_Paradigm-FF6F00?style=for-the-badge&logo=visual-paradigm&logoColor=white)
 
 Sistema completo para gestão de centros de saúde Pokémon, desenvolvido em Java com Spring Boot.
