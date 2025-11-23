@@ -3,7 +3,7 @@
  * ---------------------------------------
  * @file        DataInicializacao.java
  * @author      Gustavo Pigatto, Matheus Schvann, Alexandre Lampert, Mateus Stock, Felipe Winter
- * @version     1.2
+ * @version     1.3
  * @date        2025-11-22
  * @description Serviço responsável por buscar dados na PokeAPI v2 e montar
  *               objetos de domínio (Pokémon, Tipos, Stats, Descrições).
