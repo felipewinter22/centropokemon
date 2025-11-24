@@ -467,9 +467,13 @@ const PokedexAnime = (() => {
             
             console.log('[Register] Sprite final:', sprite);
             
-            // Prepara os dados para cadastro com vida aleatória entre 50-100%
-            const vidaMaxima = 100;
-            const vidaAtual = Math.floor(Math.random() * 51) + 50; // 50 a 100
+            // Prepara os dados para cadastro usando HP real da Pokédex
+            // Pega o HP dos stats ou usa 100 como padrão
+            const vidaMaxima = (p.stats && p.stats.hp) ? p.stats.hp : 100;
+            // Vida atual aleatória entre 50-100% do HP máximo
+            const vidaAtual = Math.floor(Math.random() * (vidaMaxima * 0.5)) + Math.floor(vidaMaxima * 0.5);
+            
+            console.log('[Register] HP Máximo:', vidaMaxima, 'HP Atual:', vidaAtual);
             
             const body = {
                 pokeApiId: id,
