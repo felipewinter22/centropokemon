@@ -218,7 +218,7 @@ body {
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(40px); }
+  from { opacity: 0; transform: translateX(8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
@@ -1475,7 +1475,7 @@ body {
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-40px); }
+  from { opacity: 0; transform: translateX(-8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
@@ -1761,7 +1761,7 @@ body {
 
 /* ===== CORREÇÕES PARA CADASTRO E LOGIN ===== */
 
-/* Animação sutil no cadastro */
+/* Animação sutil no cadastro - apenas brilho suave */
 .cadastro-page .pokedex-container {
     animation: cadastroBreath 4s ease-in-out infinite !important;
 }
@@ -1776,14 +1776,14 @@ body {
             0 0 0 4px var(--pokedex-black),
             0 16px 32px rgba(0, 0, 0, 0.7),
             inset 0 0 0 2px var(--pokedex-light-red),
-            0 0 40px rgba(255, 0, 0, 0.2);
+            0 0 50px rgba(255, 0, 0, 0.25);
     }
     50% { 
         box-shadow: 
             0 0 0 4px var(--pokedex-black),
             0 16px 32px rgba(0, 0, 0, 0.7),
             inset 0 0 0 2px var(--pokedex-light-red),
-            0 0 60px rgba(255, 0, 0, 0.4);
+            0 0 55px rgba(255, 0, 0, 0.3);
     }
 }
 
