@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Centro Pokémon</title>
     <link rel="stylesheet" href="/css/novo-style.css">
+    <link rel="stylesheet" href="/css/audio-controls.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
@@ -233,6 +234,7 @@
         </div>
     </footer>
 
+    <script src="/js/audio-manager.js"></script>
     <script>
         const API_BASE = '/api/treinadores';
         const TRAINER_ID_KEY = 'treinador_id';
@@ -268,6 +270,7 @@
             alertBox.textContent = '';
             
             if (!usuarioOuEmail || !senha) {
+                if (window.audioManager) audioManager.play('clear');
                 alertBox.classList.add('error');
                 alertBox.textContent = 'Preencha todos os campos';
                 return;
@@ -277,6 +280,7 @@
                 const treinador = await postJson(`${API_BASE}/login`, { usuarioOuEmail, senha });
                 
                 if (treinador && treinador.id) {
+                    if (window.audioManager) audioManager.play('perfect');
                     localStorage.setItem(TRAINER_ID_KEY, String(treinador.id));
                     alertBox.classList.add('success');
                     alertBox.textContent = '✅ Login realizado! Redirecionando...';
@@ -285,10 +289,12 @@
                         window.location.href = '/pokedex'; 
                     }, 1500);
                 } else {
+                    if (window.audioManager) audioManager.play('clear');
                     alertBox.classList.add('error');
                     alertBox.textContent = 'Erro ao fazer login';
                 }
             } catch (err) {
+                if (window.audioManager) audioManager.play('clear');
                 alertBox.classList.add('error');
                 if (String(err.message) === '401') {
                     alertBox.textContent = 'Usuário ou senha incorretos';

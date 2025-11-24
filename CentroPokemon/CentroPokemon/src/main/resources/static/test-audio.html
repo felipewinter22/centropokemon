@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Áudio - Cries dos Pokémon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #3B4CCA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #2a3a9c;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 2px 0;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>🔊 Teste de Áudio - Cries dos Pokémon</h1>
+    
+    <div class="test-section">
+        <h2>Teste 1: URLs Diretas da API</h2>
+        <p>Testando diferentes fontes de cries:</p>
+        <button onclick="testUrl('https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg', 'GitHub Raw (Pikachu)')">
+            GitHub Raw - Pikachu #25
+        </button>
+        <button onclick="testUrl('https://play.pokemonshowdown.com/audio/cries/pikachu.mp3', 'Pokémon Showdown (Pikachu)')">
+            Pokémon Showdown - Pikachu
+        </button>
+        <button onclick="testUrl('https://veekun.com/dex/media/pokemon/cries/25.ogg', 'Veekun (Pikachu)')">
+            Veekun - Pikachu #25
+        </button>
+    </div>
+
+    <div class="test-section">
+        <h2>Teste 2: Diferentes Pokémon</h2>
+        <button onclick="testPokemon(1)">Bulbasaur #1</button>
+        <button onclick="testPokemon(4)">Charmander #4</button>
+        <button onclick="testPokemon(7)">Squirtle #7</button>
+        <button onclick="testPokemon(25)">Pikachu #25</button>
+        <button onclick="testPokemon(150)">Mewtwo #150</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Teste 3: Verificar CORS</h2>
+        <button onclick="testCORS()">Testar CORS</button>
+        <p id="cors-result"></p>
+    </div>
+
+    <div class="test-section">
+        <h2>Console de Log</h2>
+        <div id="log" class="log"></div>
+        <button onclick="clearLog()">Limpar Log</button>
+    </div>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            logDiv.innerHTML = '';
+        }
+
+        function testUrl(url, label) {
+            log(`Testando: ${label}`, 'info');
+            log(`URL: ${url}`, 'info');
+            
+            const audio = new Audio(url);
+            
+            audio.addEventListener('loadstart', () => {
+                log(`✓ Iniciando carregamento...`, 'info');
+            });
+            
+            audio.addEventListener('loadedmetadata', () => {
+                log(`✓ Metadados carregados`, 'success');
+            });
+            
+            audio.addEventListener('loadeddata', () => {
+                log(`✓ Dados carregados - Duração: ${audio.duration}s`, 'success');
+            });
+            
+            audio.addEventListener('canplay', () => {
+                log(`✓ Pronto para tocar`, 'success');
+            });
+            
+            audio.addEventListener('error', (e) => {
+                log(`✗ ERRO: ${e.type} - ${audio.error ? audio.error.message : 'Desconhecido'}`, 'error');
+                log(`✗ Código do erro: ${audio.error ? audio.error.code : 'N/A'}`, 'error');
+            });
+            
+            audio.play()
+                .then(() => {
+                    log(`✓ Tocando com sucesso!`, 'success');
+                })
+                .catch((e) => {
+                    log(`✗ Erro ao tocar: ${e.message}`, 'error');
+                });
+        }
+
+        function testPokemon(id) {
+            const urls = [
+                `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`,
+                `https://play.pokemonshowdown.com/audio/cries/${id}.mp3`,
+                `https://veekun.com/dex/media/pokemon/cries/${id}.ogg`
+            ];
+            
+            log(`\n=== Testando Pokémon #${id} ===`, 'info');
+            
+            urls.forEach((url, index) => {
+                setTimeout(() => {
+                    testUrl(url, `Fonte ${index + 1} - Pokémon #${id}`);
+                }, index * 100);
+            });
+        }
+
+        async function testCORS() {
+            const resultDiv = document.getElementById('cors-result');
+            resultDiv.textContent = 'Testando...';
+            
+            const testUrls = [
+                'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg',
+                'https://play.pokemonshowdown.com/audio/cries/pikachu.mp3'
+            ];
+            
+            log('\n=== Teste de CORS ===', 'info');
+            
+            for (const url of testUrls) {
+                try {
+                    log(`Testando: ${url}`, 'info');
+                    const response = await fetch(url, { method: 'HEAD' });
+                    log(`✓ Status: ${response.status}`, 'success');
+                    log(`✓ Headers CORS:`, 'info');
+                    log(`  - Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin') || 'não definido'}`, 'info');
+                } catch (e) {
+                    log(`✗ Erro CORS: ${e.message}`, 'error');
+                }
+            }
+            
+            resultDiv.textContent = 'Teste concluído - veja o log';
+        }
+
+        // Log inicial
+        log('Sistema de teste carregado', 'success');
+        log('Clique nos botões para testar diferentes fontes de áudio', 'info');
+    </script>
+</body>
+</html>

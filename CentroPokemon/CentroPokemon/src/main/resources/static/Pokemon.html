@@ -15,6 +15,7 @@
     <title>Centro Pokémon - Página Básica</title>
     <link rel="stylesheet" href="/css/novo-style.css">
     <link rel="stylesheet" href="/css/centro-cura.css">
+    <link rel="stylesheet" href="/css/audio-controls.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -286,11 +287,19 @@
     </footer>
 
     <!-- @scripts   JavaScript externo para animações -->
+    <script src="/js/audio-manager.js"></script>
     <script src="/js/auth-header.js"></script>
     <script src="/js/animacoes.js"></script>
     <script>
         // Remove splash screen após 2 segundos
         document.addEventListener('DOMContentLoaded', () => {
+            // Som de entrada após um delay
+            setTimeout(() => {
+                if (window.audioManager) {
+                    audioManager.play('start');
+                }
+            }, 800);
+            
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) {
                 setTimeout(() => {
