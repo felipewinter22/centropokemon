@@ -279,7 +279,7 @@ Projeto desenvolvido como trabalho final das disciplinas de **Programação**, *
 - Felipe Winter
 - Gustavo Pigatto
 - Mateus Stock
-- Matheus Schvann
+- Matheus Schvan
 
 ## 📄 Licença
 
