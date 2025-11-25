@@ -22,7 +22,6 @@ SELECT * FROM relatorios.vw_estatisticas_treinador;
 ### Documentação Completa
 - **[README_BD.md](README_BD.md)** 
 - **[MODELO_LOGICO_NORMALIZADO.md](MODELO_LOGICO_NORMALIZADO.md)**
-- **[REQUISITOS_ATENDIDOS.md](REQUISITOS_ATENDIDOS.md)** 
 
 ## Scripts SQL
 
