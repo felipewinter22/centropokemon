@@ -368,6 +368,16 @@ const PokedexAnime = (() => {
         const name = (p.nomePt || p.nomeEn || '').toUpperCase();
         const sprite = p.spriteUrl || '';
         const tipos = Array.isArray(p.tipos) ? p.tipos.map(t => (t.nomePt || t.nome || t.nomeEn || '').toUpperCase()) : [];
+        
+        // Toca o cry do Pokémon
+        console.log('[Pokedex] Tentando tocar cry do Pokémon ID:', id);
+        console.log('[Pokedex] audioManager existe?', !!window.audioManager);
+        if (window.audioManager && id) {
+            console.log('[Pokedex] Chamando playPokemonCry...');
+            audioManager.playPokemonCry(id);
+        } else {
+            console.warn('[Pokedex] audioManager não disponível ou ID inválido');
+        }
 
         elements.pokemonNumber.textContent = `#${String(id || 0).padStart(3, '0')}`;
         elements.pokemonName.textContent = name || '------';
@@ -426,6 +436,7 @@ const PokedexAnime = (() => {
     };
 
     const navigatePokemon = (direction) => {
+        if (window.audioManager) audioManager.play('btnClick2');
         const base = state.currentPokemonId || config.defaultPokemon;
         let newId = base + direction;
         if (newId < 1) newId = config.totalPokemon;
@@ -500,6 +511,11 @@ const PokedexAnime = (() => {
             return; 
         }
         
+        // Toca som de captura
+        if (window.audioManager) {
+            audioManager.play('itemGet');
+        }
+        
         showLoadingState(true);
         
         try {
@@ -562,6 +578,11 @@ const PokedexAnime = (() => {
             const result = await response.json();
             console.log('[Register] Resposta do servidor:', result);
             
+            // Toca som de sucesso
+            if (window.audioManager) {
+                audioManager.play('perfect');
+            }
+            
             // Salva dados para a tela de sucesso - usa o sprite que veio do servidor
             const successData = {
                 nome: result.nomePt || p.nomePt || p.nomeEn || '',
@@ -599,6 +620,10 @@ const PokedexAnime = (() => {
             elements.typeButtons.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.type === type);
             });
+            // Toca som do tipo
+            if (window.audioManager) {
+                audioManager.playTypeSound(type);
+            }
             showNotification(`Filtrando por: ${type.toUpperCase()}`);
             loadRandomPokemonByType(type);
         }

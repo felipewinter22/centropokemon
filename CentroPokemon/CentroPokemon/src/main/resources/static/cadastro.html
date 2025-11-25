@@ -16,7 +16,9 @@
     <title>Cadastro de Treinador - Centro Pokémon</title>
     <link rel="stylesheet" href="/css/novo-style.css" />
     <link rel="stylesheet" href="/css/pokedex-anime.css" />
+    <link rel="stylesheet" href="/css/audio-controls.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script src="/js/audio-manager.js"></script>
     
     <!-- Script de Cadastro de Treinador -->
     <script>
@@ -61,6 +63,7 @@
             alertBox.className = 'alert';
             alertBox.textContent = '';
             if (!nome || !usuario || !email || !senha) {
+                if (window.audioManager) audioManager.play('clear');
                 alertBox.classList.add('error');
                 alertBox.textContent = 'Preencha todos os campos obrigatórios';
                 return;
@@ -74,15 +77,18 @@
                 const starterSpriteUrl = form.starterSpriteUrl ? (form.starterSpriteUrl.value || (starterId ? starterImages[starterId] : null)) : null;
                 const t = await postJson(`${API_BASE}/cadastrar`, { nome, usuario, email, senha, telefone, starterId, starterName, starterSpriteUrl });
                 if (t && t.id) {
+                    if (window.audioManager) audioManager.play('highscore');
                     localStorage.setItem(TRAINER_ID_KEY, String(t.id));
                     alertBox.classList.add('success');
                     alertBox.textContent = 'Cadastro realizado com sucesso! Redirecionando...';
                     setTimeout(() => { window.location.href = '/pokedex-anime.html'; }, 1200);
                 } else {
+                    if (window.audioManager) audioManager.play('clear');
                     alertBox.classList.add('error');
                     alertBox.textContent = 'Não foi possível concluir o cadastro';
                 }
             } catch (err) {
+                if (window.audioManager) audioManager.play('clear');
                 alertBox.classList.add('error');
                 if (String(err && err.message) === '409') {
                     alertBox.textContent = 'Usuário ou e-mail já cadastrados';
