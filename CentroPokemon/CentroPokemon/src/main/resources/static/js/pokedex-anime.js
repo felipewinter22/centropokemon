@@ -436,7 +436,7 @@ const PokedexAnime = (() => {
     };
 
     const navigatePokemon = (direction) => {
-        if (window.audioManager) audioManager.play('jump');
+        if (window.audioManager) audioManager.play('btnClick2');
         const base = state.currentPokemonId || config.defaultPokemon;
         let newId = base + direction;
         if (newId < 1) newId = config.totalPokemon;

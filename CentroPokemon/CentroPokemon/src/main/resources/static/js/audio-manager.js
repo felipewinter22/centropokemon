@@ -45,6 +45,11 @@ class AudioManager {
         Object.values(this.sounds).forEach(sound => {
             sound.volume = this.volume;
         });
+        
+        // Ajustar volume específico do som de abertura (mais baixo)
+        if (this.sounds.open) {
+            this.sounds.open.volume = this.volume * 0.5; // 50% do volume padrão
+        }
     }
 
     play(soundName) {
@@ -61,11 +66,21 @@ class AudioManager {
         // Formata o ID com zeros à esquerda (ex: 25 -> 025)
         const idFormatted = String(pokemonId).padStart(3, '0');
         
-        // Tenta diferentes fontes de cries
+        // Tenta diferentes fontes de cries (cada pasta tem sua geração correspondente)
         const sources = [
-            `/sons/cries/3DS - Pokemon Rumble Blast _ Super Pokemon Rumble - Pokemon - Pokemon Cries (1st Generation)/Generation 1/SE_PV${idFormatted}.wav`,
-            `/sons/cries/3DS - Pokemon Ultra Sun _ Ultra Moon - Pokemon - Pokemon Cries (1st Generation)/PokemonSuMo/SE_PV${idFormatted}.wav`,
-            `/sons/cries/DS _ DSi - Pokemon Black _ White - Miscellaneous - Pokemon Cries/SE_PV${idFormatted}.wav`
+            `/sons/cries/cries/Generation 1/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (2)/Generation 2/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (3)/Generation 3/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (4)/Generation 4/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (5)/Generation 5/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (6)/Generation 6/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (7)/Generation 7/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (8)/Generation 8/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (9)/Generation 9/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (10)/Generation 10/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (11)/Generation 11/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (12)/Generation 12/SE_PV${idFormatted}.wav`,
+            `/sons/cries/cries (13)/Generation 13/SE_PV${idFormatted}.wav`
         ];
         
         const tryNextSource = (index) => {
@@ -103,8 +118,8 @@ class AudioManager {
             'electric': 'timeUp',
             'elétrico': 'timeUp',
             'normal': 'open',
-            'fighting': 'jump',
-            'lutador': 'jump',
+            'fighting': 'blockCatch',
+            'lutador': 'blockCatch',
             'poison': 'hurry',
             'veneno': 'hurry',
             'ground': 'timeDown',
