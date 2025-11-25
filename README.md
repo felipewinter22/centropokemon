@@ -202,7 +202,8 @@ Response: Pokémon aleatório do tipo especificado
 - [Class](diagrams/Class%20Diagram1.png)
 - [Activity](diagrams/Activity%20Diagram1.png)
 - [Estados de saúde do Pokémon](diagrams/Estados%20de%20sa%C3%BAde%20do%20Pok%C3%A9mon.png)
-
+- [Modelo Lógico Relacional (ERD)](diagrams/Entity%20Relationship%20Diagram1.png)
+  
 Projeto visual original: [sources/CentroPokemon.vpp](sources/CentroPokemon.vpp)
 
 ## 🎯 Arquitetura do Projeto
