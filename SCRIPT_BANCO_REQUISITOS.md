@@ -115,12 +115,6 @@ db/
 │   ├── INSTALACAO_RAPIDA.md          Guia de 5 min
 │   ├── README_BD.md                   Doc completa
 │   └── MODELO_LOGICO_NORMALIZADO.md  Modelo
-│
-├── Requisitos e Avaliação
-│   ├── REQUISITOS_ATENDIDOS.md       Checklist
-│   ├── CHECKLIST_ENTREGA.md          Entrega
-│   ├── PARA_O_PROFESSOR.md           Avaliação
-│   └── RESUMO_1_PAGINA.md            Resumo
 ```
 
 ---
